@@ -1,0 +1,10 @@
+=== RESULT ENVELOPE DEMO ===
+
+1. Success result
+{'status': 'success', 'tool': 'echo', 'output': 'hello', 'error': None, 'message': 'Tool executed successfully', 'duration_s': 4e-06, 'trace': [{'event': 'execution_started', 'tool': 'echo'}, {'event': 'tool_selected', 'tool': 'echo'}, {'event': 'execution_completed', 'tool': 'echo'}]}
+
+2. Failure result
+{'status': 'error', 'tool': 'divide', 'output': None, 'error': 'ZeroDivisionError', 'message': 'division by zero', 'duration_s': 2.1e-05, 'trace': [{'event': 'execution_started', 'tool': 'divide'}, {'event': 'tool_selected', 'tool': 'divide'}, {'event': 'execution_failed', 'tool': 'divide', 'error': 'ZeroDivisionError'}]}
+
+3. Rejected result
+{'status': 'rejected', 'tool': 'unknown_tool', 'output': None, 'error': 'tool_not_allowed', 'message': 'Requested tool is not registered', 'duration_s': 8e-06, 'trace': [{'event': 'execution_started', 'tool': 'unknown_tool'}, {'event': 'execution_rejected', 'reason': 'tool_not_allowed'}]}

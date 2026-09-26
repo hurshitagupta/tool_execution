@@ -307,3 +307,98 @@ The automated tests verify:
 - **Measurement:** Execution duration, attempt count, and retry count are returned.
 - **Side-effect protection:** Idempotency keys prevent duplicate write operations.
 - **Secret hygiene:** No credentials or secrets are stored in source code.
+
+---
+
+## Task 4 — Result Envelope
+
+### Objective
+Implement a consistent result envelope so that every tool execution returns the same structured response format for success, failure, or rejection.
+
+### Implementation
+The result envelope is implemented in:
+
+```text
+result_envelope.py
+```
+
+A typed result structure is defined using:
+
+```python
+class ResultEnvelope(TypedDict):
+```
+
+Every result contains the following fields:
+
+```text
+status
+tool
+output
+error
+message
+duration_s
+trace
+```
+
+The `make_result()` function is used to construct the result consistently:
+
+```python
+def make_result(...)
+```
+
+This avoids returning different response structures for different execution outcomes.
+
+### Success Result
+A successful execution returns:
+
+```text
+status = success
+output = tool result
+error = None
+```
+
+The result also includes the tool name, execution duration, message, and trace.
+
+### Failure Result
+If the tool raises an exception, the same envelope is returned with:
+
+```text
+status = error
+output = None
+error = exception type
+```
+
+For example, division by zero returns:
+
+```text
+error = ZeroDivisionError
+```
+
+### Rejected Result
+Unknown tools or invalid requests also use the same result structure.
+
+For an unknown tool:
+
+```text
+status = rejected
+error = tool_not_allowed
+```
+
+### Run Command
+
+```powershell
+python result_envelope.py
+```
+
+### Run Automated Tests
+
+```powershell
+pytest tests/test_result_envelope.py -v
+```
+
+### Evidence
+
+```text
+outputs/result_envelope.txt
+outputs/test_result_envelope.txt
+```
