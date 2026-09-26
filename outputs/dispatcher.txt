@@ -1,0 +1,7 @@
+=== DISPATCHER DEMO ===
+
+1. Successful dispatch
+{'status': 'success', 'output': 'Hello from dispatcher', 'duration_s': 1.3e-05, 'trace': [{'event': 'dispatch_started', 'tool': 'echo'}, {'event': 'tool_selected', 'tool': 'echo'}, {'event': 'execution_completed', 'tool': 'echo'}]}
+
+2. Rejected dispatch
+{'status': 'rejected', 'error': 'tool_not_allowed', 'trace': [{'event': 'dispatch_started', 'tool': 'delete_database'}, {'event': 'dispatch_rejected', 'reason': 'tool_not_allowed'}]}

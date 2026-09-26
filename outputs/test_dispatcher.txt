@@ -1,0 +1,13 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.13, pytest-9.1.1, pluggy-1.6.0 -- C:\Users\Hurshita Gupta\OneDrive\Desktop\tool_execution\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\Hurshita Gupta\OneDrive\Desktop\tool_execution
+configfile: pyproject.toml
+collecting ... collected 4 items
+
+tests/test_dispatcher.py::test_dispatch_success PASSED                   [ 25%]
+tests/test_dispatcher.py::test_unknown_tool_is_rejected PASSED           [ 50%]
+tests/test_dispatcher.py::test_invalid_arguments_are_rejected PASSED     [ 75%]
+tests/test_dispatcher.py::test_tool_failure_is_captured PASSED           [100%]
+
+============================== 4 passed in 0.06s ==============================
