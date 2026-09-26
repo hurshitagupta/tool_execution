@@ -402,3 +402,86 @@ pytest tests/test_result_envelope.py -v
 outputs/result_envelope.txt
 outputs/test_result_envelope.txt
 ```
+
+---
+
+## Task 5 — Execution Metrics
+
+### Objective
+Implement execution metrics so that tool behavior can be measured using concrete counts, success and error rates, and execution duration.
+
+### Implementation
+The metrics implementation is in:
+
+```text
+execution_metrics.py
+```
+
+The `ExecutionMetrics` class tracks:
+
+```text
+total_executions
+success_count
+error_count
+rejected_count
+total_duration_s
+```
+
+Every execution result is recorded using:
+
+```python
+metrics.record(status, duration_s)
+```
+
+The final measurements are returned using:
+
+```python
+metrics.summary()
+```
+
+### Metrics Produced
+The summary contains:
+
+```text
+total_executions
+success_count
+error_count
+rejected_count
+success_rate_percent
+error_rate_percent
+average_duration_s
+```
+
+This provides measurable evidence of how the executor behaves across successful, failed, and rejected tool calls.
+
+### Demonstrated Execution Cases
+The implementation demonstrates:
+
+- successful `echo` execution
+- successful `divide` execution
+- failed division by zero
+- rejected unknown tool
+
+These calls produce a final metrics summary showing total executions and outcome rates.
+
+### Run Command
+
+```powershell
+python execution_metrics.py
+```
+
+### Run Automated Tests
+
+```powershell
+pytest tests/test_execution_metrics.py -v
+```
+
+### Tests Covered
+The automated tests verify:
+
+- successful executions update success metrics
+- failed executions update error metrics
+- rejected executions update rejection metrics
+- multiple executions produce the correct combined counts
+- success rate and error rate are calculated correctly
+- average execution duration is recorded

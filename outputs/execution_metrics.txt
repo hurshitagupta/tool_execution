@@ -1,0 +1,16 @@
+=== EXECUTION METRICS DEMO ===
+
+1. Successful execution
+{'status': 'success', 'output': 'hello', 'duration_s': 4e-06, 'trace': [{'event': 'execution_started', 'tool': 'echo'}, {'event': 'tool_selected', 'tool': 'echo'}, {'event': 'execution_completed', 'tool': 'echo'}]}
+
+2. Another successful execution
+{'status': 'success', 'output': 5.0, 'duration_s': 5e-06, 'trace': [{'event': 'execution_started', 'tool': 'divide'}, {'event': 'tool_selected', 'tool': 'divide'}, {'event': 'execution_completed', 'tool': 'divide'}]}
+
+3. Failed execution
+{'status': 'error', 'error': 'ZeroDivisionError', 'duration_s': 5e-06, 'trace': [{'event': 'execution_started', 'tool': 'divide'}, {'event': 'tool_selected', 'tool': 'divide'}, {'event': 'execution_failed', 'tool': 'divide', 'error': 'ZeroDivisionError'}]}
+
+4. Rejected execution
+{'status': 'rejected', 'error': 'tool_not_allowed', 'duration_s': 2e-06, 'trace': [{'event': 'execution_started', 'tool': 'unknown_tool'}, {'event': 'execution_rejected', 'reason': 'tool_not_allowed'}]}
+
+=== METRICS SUMMARY ===
+{'total_executions': 4, 'success_count': 2, 'error_count': 1, 'rejected_count': 1, 'success_rate_percent': 50.0, 'error_rate_percent': 25.0, 'average_duration_s': 4e-06}
