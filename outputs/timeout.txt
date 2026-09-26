@@ -1,0 +1,7 @@
+=== TIMEOUT DEMO ===
+
+1. Successful execution
+{'status': 'success', 'output': 'Processed: hello', 'duration_s': 0.001834, 'trace': [{'event': 'dispatch_started', 'tool': 'fast'}, {'event': 'tool_selected', 'tool': 'fast'}, {'event': 'execution_completed', 'tool': 'fast'}]}
+
+2. Timeout execution
+{'status': 'timeout', 'error': 'execution_timeout', 'timeout_s': 0.5, 'duration_s': 0.554031, 'trace': [{'event': 'dispatch_started', 'tool': 'slow'}, {'event': 'tool_selected', 'tool': 'slow'}, {'event': 'execution_timeout', 'tool': 'slow'}]}
