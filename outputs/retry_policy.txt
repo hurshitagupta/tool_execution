@@ -1,0 +1,17 @@
+=== RETRY POLICY DEMO ===
+
+1. Success without retry
+{'status': 'success', 'output': 'hello', 'attempts': 1, 'retries': 0, 'duration_s': 7e-06, 'trace': [{'event': 'execution_started', 'tool': 'echo'}, {'event': 'attempt_started', 'attempt': 1}, {'event': 'execution_completed', 'attempt': 1}]}
+
+2. Transient failure followed by retry
+{'status': 'success', 'output': 'Tool succeeded', 'attempts': 2, 'retries': 1, 'duration_s': 0.050469, 'trace': [{'event': 'execution_started', 'tool': 'flaky'}, {'event': 'attempt_started', 'attempt': 1}, {'event': 'transient_failure', 'attempt': 1, 'error': 'TransientToolError'}, {'event': 'retry_scheduled', 'next_attempt': 2, 'backoff_s': 0.05}, {'event': 'attempt_started', 'attempt': 2}, {'event': 'execution_completed', 'attempt': 2}]}
+
+3. Permanent failure - no retry
+{'status': 'error', 'error': 'PermanentToolError', 'attempts': 1, 'retries': 0, 'duration_s': 2.9e-05, 'trace': [{'event': 'execution_started', 'tool': 'permanent_failure'}, {'event': 'attempt_started', 'attempt': 1}, {'event': 'permanent_failure', 'attempt': 1, 'error': 'PermanentToolError'}]}
+
+4. Retry limit reached
+{'status': 'error', 'error': 'retry_limit_reached', 'attempts': 3, 'retries': 2, 'duration_s': 0.151183, 'trace': [{'event': 'execution_started', 'tool': 'always_transient'}, {'event': 'attempt_started', 'attempt': 1}, {'event': 'transient_failure', 'attempt': 1, 'error': 'TransientToolError'}, {'event': 'retry_scheduled', 'next_attempt': 2, 'backoff_s': 0.05}, {'event': 'attempt_started', 'attempt': 2}, {'event': 'transient_failure', 'attempt': 2, 'error': 'TransientToolError'}, {'event': 'retry_scheduled', 'next_attempt': 3, 'backoff_s': 0.1}, {'event': 'attempt_started', 'attempt': 3}, {'event': 'transient_failure', 'attempt': 3, 'error': 'TransientToolError'}, {'event': 'retry_limit_reached', 'attempt': 3}]}
+
+5. Idempotent write
+{'status': 'success', 'output': {'message': 'Order created', 'order': {'order_id': '1001', 'status': 'created'}}, 'attempts': 1, 'retries': 0, 'duration_s': 1.5e-05, 'trace': [{'event': 'execution_started', 'tool': 'create_order'}, {'event': 'attempt_started', 'attempt': 1}, {'event': 'execution_completed', 'attempt': 1}]}
+{'status': 'success', 'output': {'message': 'Existing result returned', 'order': {'order_id': '1001', 'status': 'created'}}, 'attempts': 1, 'retries': 0, 'duration_s': 2.9e-05, 'trace': [{'event': 'execution_started', 'tool': 'create_order'}, {'event': 'attempt_started', 'attempt': 1}, {'event': 'execution_completed', 'attempt': 1}]}

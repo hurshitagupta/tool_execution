@@ -175,4 +175,135 @@ The automated tests verify:
 - **Measurement:** Execution duration is recorded as `duration_s`.
 - **Secret hygiene:** No credentials or secrets are stored in source code.
 
+---
 
+## Task 3 — Retry Policy
+
+### Objective
+Implement a retry policy that retries only transient failures, applies a retry limit, uses capped backoff, and avoids duplicate write side effects using idempotency keys.
+
+### Implementation
+The retry logic is implemented in:
+
+```text
+retry_policy.py
+```
+
+The implementation classifies failures into:
+
+```text
+TransientToolError
+PermanentToolError
+```
+
+Only transient failures are retried.
+
+Permanent or unclassified failures return immediately without another attempt.
+
+### Retry Limit
+The number of attempts is controlled using:
+
+```python
+total_attempts = max_retries + 1
+```
+
+for a maximum of three execution attempts.
+
+The retry value is also validated so that it cannot exceed the configured hard limit of `3`.
+
+### Retry Backoff
+A delay is applied between retries using:
+
+```python
+delay = min(backoff_s * attempt, 0.5)
+```
+
+This creates a small increasing delay while ensuring the wait never exceeds `0.5` seconds.
+
+### Failure Classification
+Transient failures are handled using:
+
+```python
+except TransientToolError:
+```
+
+and may be retried.
+
+Permanent failures are handled using:
+
+```python
+except PermanentToolError:
+```
+
+and are not retried.
+
+### Idempotency
+The `create_order_tool` demonstrates protection against duplicate write operations.
+
+Each write includes an:
+
+```text
+idempotency_key
+```
+
+Before creating the order, the tool checks:
+
+```python
+if idempotency_key in IDEMPOTENCY_STORE:
+```
+
+If the same operation was already completed, the existing result is returned instead of creating another order.
+
+This demonstrates that exactly-once execution is not automatic and that write retries require additional protection.
+
+### Run Command
+
+```powershell
+python retry_policy.py
+```
+
+### Run Automated Tests
+
+```powershell
+pytest tests/test_retry_policy.py -v
+```
+
+### Save Program Output
+
+```powershell
+python retry_policy.py > outputs/retry_policy.txt
+```
+
+### Save Test Output
+
+```powershell
+pytest tests/test_retry_policy.py -v > outputs/test_retry_policy.txt
+```
+
+### Evidence
+
+```text
+outputs/retry_policy.txt
+outputs/test_retry_policy.txt
+```
+
+### Tests Covered
+The automated tests verify:
+
+- successful execution without retry
+- transient failure followed by successful retry
+- permanent failure without retry
+- retry limit enforcement
+- invalid retry configuration rejection
+- duplicate write prevention using an idempotency key
+
+### Guardrails
+- **Step/retry limit:** Retry attempts are limited using `max_retries`, with a hard maximum of 3 retries.
+- **Retry policy:** Only classified transient failures are retried.
+- **Backoff:** Retries use capped backoff.
+- **Validation:** Tool name, arguments, retry count, and backoff values are validated.
+- **Execution boundary:** Only registered tools can execute.
+- **Traceability:** Every attempt, failure, retry, and final result is recorded in the trace.
+- **Measurement:** Execution duration, attempt count, and retry count are returned.
+- **Side-effect protection:** Idempotency keys prevent duplicate write operations.
+- **Secret hygiene:** No credentials or secrets are stored in source code.
